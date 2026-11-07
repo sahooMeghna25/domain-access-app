@@ -1,0 +1,13 @@
+{
+  "expo": {
+    "name": "Domain Access",
+    "slug": "domain-access-app",
+    "scheme": "domainaccessapp",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "plugins": ["expo-router"],
+    "experiments": { "typedRoutes": false },
+    "web": { "bundler": "metro", "output": "single" }
+  }
+}

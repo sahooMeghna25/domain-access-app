@@ -1,0 +1,23 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAllowedDomain() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email.matches('.*@hbplus[.]fit$');
+    }
+
+    match /users/{userId} {
+      allow read: if isAllowedDomain() && request.auth.uid == userId;
+      // Client may create/update profile fields, but cannot assign its own role.
+      allow create: if isAllowedDomain()
+        && request.auth.uid == userId
+        && request.resource.data.keys().hasOnly(['email', 'displayName', 'photoURL']);
+      allow update: if isAllowedDomain()
+        && request.auth.uid == userId
+        && request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['displayName', 'photoURL']);
+      allow delete: if false;
+    }
+  }
+}
